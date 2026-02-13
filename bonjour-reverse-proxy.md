@@ -24,6 +24,32 @@ A lightweight proxy that:
 This would let you type `https://ocean-explorer.local` in a browser and reach the dev server
 automatically — no `/etc/hosts` editing, no remembering port numbers.
 
+## Existing webpack-dev-server support
+
+webpack-dev-server already has a built-in
+[`bonjour` option](https://webpack.js.org/configuration/dev-server/#devserverbonjour) that
+publishes the dev server as a Bonjour service on startup. Configuration is minimal:
+
+```js
+devServer: {
+  bonjour: {
+    name: 'ocean-explorer',
+  },
+}
+```
+
+This publishes a service record like `ocean-explorer._https._tcp.local` with the server's
+host and port. The service name, type, and subtypes can be customized via the options object
+(passed through to the `bonjour-service` npm package). This is already enough for programmatic
+discovery — for example, Playwright tests can find the dev server's port without hardcoding
+it. The missing piece is turning that service announcement into something a browser can use
+(hostname resolution + reverse proxy on a standard port), which is what this tool would
+provide.
+
+Vite does not have built-in bonjour support. If this proxy tool gained traction, it could
+motivate adding similar service publishing to Vite — the implementation would be small since
+`bonjour-service` does the heavy lifting. A Vite plugin could also work.
+
 ## Prior art
 
 - **dinghy-http-proxy** — Did something similar for Docker containers (watched Docker events,
