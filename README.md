@@ -13,3 +13,6 @@ Ideas for future projects and tools.
 - [Sandbox Claude Code's Temporary Test Scripts](sandbox-claude-temporary-code.md) — Run
   Claude Code's throwaway `tsx` snippets in a sandbox so they can be auto-approved without
   granting full system access.
+- [KeyCastr Key Filter](keycast-key-filter.md) — Fork KeyCastr to show only navigation keys
+  (Tab, Space, arrows) and modifier combos, hiding regular character keys during screen share
+  demos.
