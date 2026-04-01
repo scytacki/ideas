@@ -16,3 +16,6 @@ Ideas for future projects and tools.
 - [KeyCastr Key Filter](keycast-key-filter.md) — Fork KeyCastr to show only navigation keys
   (Tab, Space, arrows) and modifier combos, hiding regular character keys during screen share
   demos.
+- [Automated Timesheet from Activity Logs](automated-timesheet-from-activity-logs.md) — Use
+  Claude to map application activity logs (from Timing or ActivityWatch) to projects and
+  topics, automating the manual timesheet reconstruction process.
