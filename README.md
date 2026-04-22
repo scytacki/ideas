@@ -19,3 +19,6 @@ Ideas for future projects and tools.
 - [Automated Timesheet from Activity Logs](automated-timesheet-from-activity-logs.md) — Use
   Claude to map application activity logs (from Timing or ActivityWatch) to projects and
   topics, automating the manual timesheet reconstruction process.
+- [Markdown Review via GitHub PRs](markdown-review-via-github-prs.md) — Use a PR as the
+  container for collecting line-level comments and suggested changes on markdown files,
+  working around GitHub's diff-only commenting limitation.
