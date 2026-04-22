@@ -22,3 +22,6 @@ Ideas for future projects and tools.
 - [Markdown Review via GitHub PRs](markdown-review-via-github-prs.md) — Use a PR as the
   container for collecting line-level comments and suggested changes on markdown files,
   working around GitHub's diff-only commenting limitation.
+- [PR Description Variables for Deploy URLs](pr-variables-for-deploy-urls.md) — Let
+  developers declare variables (e.g. the CLUE unit) in the PR description and have
+  `s3-deploy-action` substitute them into the deploy URL.
