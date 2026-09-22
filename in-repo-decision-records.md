@@ -98,13 +98,99 @@ process.
 
 ## Backfilling past decisions
 
-Most of the value at the start is in writing up decisions already made. Two rules keep
-backfilled records honest:
+Most of the value at the start is in writing up the *right* decisions already made — which
+makes picking them, and trusting the result, the whole problem.
+
+### Where the evidence lives
+
+Rationale that never became a record was usually written down somewhere else:
+
+- **Git commit messages**, which often carry the reasoning for a constraint in the same
+  change that introduced it, and which are searchable with `git log --grep` and `git log -S`.
+- **GitHub** pull request review threads and issues.
+- **Jira** tickets and their comment threads.
+- **Slack**, where the argument frequently happened before any ticket existed.
+- **Pivotal Tracker**, for decisions predating the Jira migration, if a backup or export of
+  the old stories can be recovered.
+
+All of these are searchable, and an AI can draft a record from them. That is the cheap half
+of the work.
+
+### Two rules keep backfilled records honest
 
 - **Mark them as reconstruction** (`retrospective: true`). They are a best reading of why
   the code looks this way, not minutes of a meeting.
-- **Cite the evidence** — the commit, the PR, the ticket. Often the single most valuable
-  line in the record is the commit that introduced the constraint.
+- **Cite the evidence** — the commit, the PR, the ticket, the Slack thread. Often the single
+  most valuable line in the record is the commit that introduced the constraint.
+
+### Expert review is the bottleneck
+
+A drafted record has to be confirmed by a developer who was there. An AI assembling a
+rationale out of an archive produces something plausible, and plausible is not the same as
+correct — the stated reason may be a reasonable-sounding reconstruction rather than the one
+that actually drove the decision. Drafting scales; that review does not.
+
+### So only backfill decisions with evidence of violation
+
+Write up a decision when something shows it wasn't understood:
+
+- **Violated and corrected** — pushback in a review thread, a revert, a bug filed against
+  the change.
+- **Violated and ignored** — the code has drifted and nobody caught it.
+
+A decision nobody has ever violated is probably obvious enough from the code that it doesn't
+earn scarce review time. This is the same friction-driven trigger as the **Wait** option
+under design specs above, applied to history instead of to new work.
+
+The principle behind it: **a wrong record is worse than a missing one.** A missing record
+leaves the status quo — infer the pattern from the code. A wrong one gets cited from code
+comments, enforced by a check, and repeated back by an AI with far more confidence than an
+inferred pattern would ever carry.
+
+### Finding them: violation-first and rule-first
+
+Searching for violations directly only finds the ones that left a trace. There is a second
+direction that reaches the silent ones:
+
+- **Violation-first.** Start from a correction — a revert, pushback in a review, a bug filed
+  against the change — and write up the rule it implies.
+- **Rule-first.** Start from a *statement* of how things should be, in a Slack message, a PR
+  comment, or a commit message, then check the code for whether it actually holds. This is
+  what turns "violated and ignored" from an undetectable state into an audit: once the
+  candidate rule is written down, there is something concrete to test the codebase against.
+
+The rule-first pass is also where the executable-check idea pays for itself twice. The check
+written to audit the code for compliance is the same check that enforces the rule going
+forward — see *Make decisions executable where possible* below.
+
+The highest-value thing to search for is **a reviewer accepting a known violation** — "fine
+to leave it this way for now." A single comment like that carries all three parts at once:
+the rule exists, this code breaks it, and the breach was knowingly tolerated. Variants worth
+grepping the archive for: "not worth changing now", "we should really", "ideally this
+would", and `TODO`/`HACK` comments left in the code itself.
+
+### Many of these aren't decisions
+
+A rule recovered this way was often never decided. Nobody put alternatives on the table and
+picked one — someone stated in passing how things obviously are, nobody disagreed, and it
+became a principle, a convention, or an invariant without ever being a decision.
+
+That changes the shape of the record, not just its name. MADR's "considered options" and
+"decision drivers" sections come out empty for a rule nobody argued about, and filling them
+in anyway invents a deliberation that never happened, which is exactly the fabrication the
+expert review is there to catch. The honest form is thinner: the rule, why it holds, and how
+it's enforced. A Y-statement is close to the right size.
+
+So the register holds two genres:
+
+- **A choice made under tension** — real alternatives, real trade-offs, something given up.
+  The full MADR shape fits, and the consequences section is the valuable part.
+- **A principle held as obvious** — nothing was weighed. Rule, rationale, enforcement. The
+  valuable part is the rule statement itself, because that is what a person or an AI will
+  match against.
+
+"Decision record" stays as the umbrella term. It is the name the prior art uses, and MADR
+already stretched it once — from *architectural* to *any* — for the same reason.
 
 ## Discovery
 
@@ -169,5 +255,10 @@ The failure message should name the record, so the check and the rationale stay 
   convention that only decisions someone could plausibly violate get recorded.
 - What's the minimum tooling worth building: index generation, front-matter validation,
   supersede-link checking?
-- Could the register be generated, at least in draft, from existing PR discussions? That's
-  where much of this rationale is already written down.
+- Could the register be generated, at least in draft, from the existing archive — commit
+  messages, PR threads, Jira, Slack, an old Pivotal export? That's where much of this
+  rationale is already written down. The real question is whether an AI draft plus expert
+  review is cheaper than the expert writing the record directly.
+- How well does the rule-first pass actually work in practice? It depends on principles
+  having been stated in writing somewhere, and on the compliance audit being cheap enough to
+  run. A rule that was never articulated at all stays invisible to both directions of search.
