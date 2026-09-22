@@ -25,3 +25,6 @@ Ideas for future projects and tools.
 - [PR Description Variables for Deploy URLs](pr-variables-for-deploy-urls.md) — Let
   developers declare variables (e.g. the CLUE unit) in the PR description and have
   `s3-deploy-action` substitute them into the deploy URL.
+- [In-Repo Decision Records for AI-Assisted Development](in-repo-decision-records.md) —
+  Keep design decisions in the repo as ADR-style records so developers and AI can discover
+  them, review feature requests against them, and enforce them with lint rules.
