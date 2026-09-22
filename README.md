@@ -28,3 +28,6 @@ Ideas for future projects and tools.
 - [In-Repo Decision Records for AI-Assisted Development](in-repo-decision-records.md) —
   Keep design decisions in the repo as ADR-style records so developers and AI can discover
   them, review feature requests against them, and enforce them with lint rules.
+- [Split Packages for Review Tiers, Keep One Repo](monorepo-with-review-tiers.md) — Break
+  the codebase into packages so review effort can scale with blast radius, but keep them in
+  one repository; the repo split is a separate, more reversible decision made per package.
