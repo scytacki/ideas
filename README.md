@@ -31,3 +31,6 @@ Ideas for future projects and tools.
 - [Split Packages for Review Tiers, Keep One Repo](monorepo-with-review-tiers.md) — Break
   the codebase into packages so review effort can scale with blast radius, but keep them in
   one repository; the repo split is a separate, more reversible decision made per package.
+- [mobx-keystone for Serialized MobX State](mobx-keystone-for-serialized-state.md) — Use
+  mobx-keystone instead of MST for state we save and load, add version fields now, and
+  migrate old documents later in one pass over the whole document before loading.
