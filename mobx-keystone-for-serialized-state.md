@@ -195,12 +195,33 @@ These were run against mobx 7.0.5 and mobx-keystone 2.2.0 in a throwaway script.
 - Tile modules register themselves when imported. Since TypeScript can drop type-only
   imports, `registerModels(...)` exists to force registration.
 
-**Type checking on load.** Loading a snapshot with a wrong-typed value in a `tProp`
-threw a `SnapshotTypeMismatchError` in every mode, including production and
-`AlwaysOff`. The error names the path and the chain of models above it. Writes after
-load are checked according to `modelAutoTypeChecking`: development only by default, or
-everywhere with `AlwaysOn`. Untyped `prop()` values are never checked. Only a wrong
-primitive was tested; refinements and deep nesting were not.
+**Type checking on load depends on `modelAutoTypeChecking`.** This was checked further
+while building neural-pathways (NPW-30).
+
+- **With the default, `DevModeOnly`, in production (or with `AlwaysOff`):**
+  - Loading catches only a wrong value in a top-level field or a union member: a
+    string where a number belongs, a speed of 5, or `version: 2`. That throws a
+    `SnapshotTypeMismatchError` naming the path.
+  - These all load without complaint:
+    - values inside arrays, records and objects (`commissioned: [5]`,
+      `stepsByConversation: { "…": "3" }`);
+    - a missing required field inside an object (`pane2: {}` loads without its
+      array, and the first action on it crashes);
+    - refinements and integer checks.
+  - Writes aren't checked at all.
+- **With `AlwaysOn`:** every load and write is checked against the full type, in
+  production too. That includes the nested values and refinements above; this was verified
+  with `NODE_ENV=production`. neural-pathways turns it on, since its trees are small.
+- **In every mode, even `AlwaysOn`, three things get past loading:**
+  - **A snapshot whose `$modelType` names a different registered model** loads as that
+    other class. A typed `fromSnapshot(A, …)` doesn't reject it; only `typeCheck` or an
+    `instanceof` check does.
+  - **Fields the model doesn't declare** are kept and pass `typeCheck`, so a misspelled
+    field is silently carried along.
+  - **A missing field with a default,** such as `version`, is filled in.
+
+Untyped `prop()` values are never checked. A loader for saved state should turn on
+`AlwaysOn` (or call `typeCheck` itself) and check the model class explicitly.
 
 **References.**
 
@@ -242,7 +263,8 @@ neural-pathways:
   what is stored.
 - Use namespaced `$modelType` names (`npw/TraceACaseState`) and never rename one, the same
   rule we follow for view ids.
-- Use `tProp` for everything that is saved, so it is type-checked on load.
+- Use `tProp` for everything that is saved, and set `modelAutoTypeChecking` to `AlwaysOn`,
+  so every load and write is fully type-checked in production too.
 - Refer to data outside the tree, such as conversations from the dataset, by a plain id
   string, not a `Ref`. Use `customRef` for links between separate trees.
 - Anything that should be saved goes in props. Don't depend on a save-time hook to
@@ -304,7 +326,7 @@ work out.
 - Is there a keystone-friendly answer to CODAP's save-time problem, or is "anything saved
   must live in props" the right rule even when it costs memory?
 - Should the migration pass be a shared package once a second project needs it?
-- How far does type checking on load go? Refinements, nested models, and unions were not
-  tested.
+- Is `AlwaysOn` type checking affordable for large trees, such as CODAP's data sets, or do
+  those need it off with an explicit `typeCheck` at load?
 - Is neural-pathways enough of a trial to judge the switch for CLUE or CODAP, given that
   its state has no tiles, shared models, or history?
