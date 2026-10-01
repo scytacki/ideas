@@ -3,6 +3,14 @@
 Use Claude to reconstruct timesheets from application activity logs, replacing the manual
 process of reviewing raw timing data and mapping it to projects and topics.
 
+## Status
+
+A working prototype is in the private repository `scytacki/timesheet` (private because its
+data and rules include personal details). It drafts a period's tasks from Timing, Claude Code
+session logs, Slack, Jira and Google Calendar, and writes them into a copy of the Grist
+document to import and review. Its `GUIDELINES.md` records how activity maps to topics, and is
+meant to become a skill.
+
 ## Problem
 
 Filling out timesheets each period takes a long time. Most of that time is spent
@@ -58,7 +66,12 @@ during a given time period.
 
 ## Pieces to figure out
 
-- How to export data from Timing (CSV, API, database file?)
-- How to give Claude access to Grist (API key + MCP server or direct API calls)
-- How to represent the project/topic mapping rules so Claude can apply them
-- Whether to switch to ActivityWatch for better extensibility
+- ~~How to export data from Timing~~: its local SQLite database can be read directly. App
+  activity records the VS Code file path and the Slack channel, and labelled calls are stored
+  as tasks.
+- How to give Claude access to Grist: the prototype edits a downloaded `.grist` file (also
+  SQLite), which works but means a download and re-import. The REST API would avoid that.
+- ~~How to represent the project/topic mapping rules~~: regex rules plus written guidelines,
+  with Jira "charged to" links used to suggest how to distribute each topic across projects.
+- Whether to switch to ActivityWatch for better extensibility. This seems less pressing now
+  that Timing's data is accessible.
