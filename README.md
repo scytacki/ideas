@@ -34,3 +34,6 @@ Ideas for future projects and tools.
 - [mobx-keystone for Serialized MobX State](mobx-keystone-for-serialized-state.md) — Use
   mobx-keystone instead of MST for state we save and load, add version fields now, and
   migrate old documents later in one pass over the whole document before loading.
+- [Cloning mobx-keystone Subtrees That Contain References](mobx-keystone-clone-refs.md) —
+  keystone's `clone()` gives models new ids but leaves references inside the copy on the old
+  ids. Parked: what a copy should do with references needs discussion before it is reported.
