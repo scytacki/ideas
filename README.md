@@ -37,3 +37,7 @@ Ideas for future projects and tools.
 - [Cloning mobx-keystone Subtrees That Contain References](mobx-keystone-clone-refs.md) —
   keystone's `clone()` gives models new ids but leaves references inside the copy on the old
   ids. Parked: what a copy should do with references needs discussion before it is reported.
+- [Control Which Jira Issues a PR Links To](jira-github-integration-links.md) — The
+  GitHub-for-Jira integration links a PR to every issue key in its description, so naming
+  follow-up stories attaches the PR to them; look for a setting, a workaround, or our own
+  integration.
