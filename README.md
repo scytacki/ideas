@@ -41,3 +41,6 @@ Ideas for future projects and tools.
   GitHub-for-Jira integration links a PR to every issue key in its description, so naming
   follow-up stories attaches the PR to them; look for a setting, a workaround, or our own
   integration.
+- [Balance Browser Test Shards Without Cypress Cloud](browser-test-sharding-without-cypress-cloud.md) —
+  Split Cypress and Playwright specs across CI jobs by their recorded run times, planned in one
+  job that also builds the app once for the test jobs, and the deploy.
